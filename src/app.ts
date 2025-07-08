@@ -5,6 +5,8 @@ import { model, Schema } from "mongoose";
 
 const app: Application = express();
 
+app.use(express.json());
+
 const noteSchema = new Schema({
   title: { type: String, required: true, trim: true },
   content: { type: String, default: "" },
@@ -25,26 +27,41 @@ const noteSchema = new Schema({
 
 const Note = model("Note", noteSchema);
 
-app.post("/create-note", async (req: Request, res: Response) => {
-  const myNote = new Note({
-    title: "Learning Express",
-    tags: {
-      label: "database",
-    },
-  });
+app.post("/notes/create-note", async (req: Request, res: Response) => {
+  const body = req.body;
+  // const myNote = new Note({
+  //   title: "Learning Express",
+  //   tags: {
+  //     label: "database",
+  //   },
+  // });
 
-  await myNote.save();
+  // await myNote.save();
+
+  const note = await Note.create(body);
   res.status(201).json({
     success: true,
     message: "Note created successfully",
-    note: myNote,
+    note,
   });
 });
-
-// app.use(express.json());
-
-// app.use("/notes", notesRoutes);
-// app.use("/users", usersRoutes);
+app.get("/notes", async (req: Request, res: Response) => {
+  const notes = await Note.find();
+  res.status(201).json({
+    success: true,
+    message: "Note get successfully",
+    notes,
+  });
+});
+app.get("/notes/:noteId", async (req: Request, res: Response) => {
+  const noteId = req.params.noteId;
+  const note = await Note.findById(noteId);
+  res.status(201).json({
+    success: true,
+    message: "Note get successfully",
+    note,
+  });
+});
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Welcome to Note App");
