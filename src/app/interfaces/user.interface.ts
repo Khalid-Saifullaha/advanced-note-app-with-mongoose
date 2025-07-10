@@ -1,7 +1,8 @@
 export interface IUser {
-    firstName: string,
-    lastName: string,
-    email: string,
-    password: string,
-    role: 'user' | 'admin'
+  firstName: string;
+  lastName: string;
+  age: number;
+  email: string;
+  password: string;
+  role: "USER" | "ADMIN" | "SUPERADMIN";
 }
