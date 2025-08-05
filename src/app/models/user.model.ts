@@ -17,7 +17,7 @@ const addressSchema = new Schema<IAddress>(
     _id: false,
   }
 );
-const userSchema = new Schema<IUser, Model<IUser>, UserInstanceMethods>(
+const userSchema = new Schema<IUser, UserInstanceMethods, UserInstanceMethods>(
   {
     firstName: {
       type: String,
@@ -79,7 +79,15 @@ const userSchema = new Schema<IUser, Model<IUser>, UserInstanceMethods>(
 );
 userSchema.method("hashPassword", async function (plainPassword: string) {
   const password = await bcrypt.hash(plainPassword, 10);
-  this.password = password;
+  // this.password = password;
+  // this.save();
+  return password;
+});
+userSchema.static("hashPassword", async function (plainPassword: string) {
+  const password = await bcrypt.hash(plainPassword, 10);
+  // this.password = password;
+  // this.save();
+  return password;
 });
 
-export const User = model("Users", userSchema);
+export const User = model<IUser, UserInstanceMethods>("Users", userSchema);
