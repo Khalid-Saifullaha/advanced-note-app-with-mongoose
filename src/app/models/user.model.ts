@@ -6,6 +6,7 @@ import {
   IUser,
   UserInstanceMethods,
 } from "../interfaces/user.interface";
+import { th } from "zod/v4/locales/index.cjs";
 
 const addressSchema = new Schema<IAddress>(
   {
@@ -88,6 +89,15 @@ userSchema.static("hashPassword", async function (plainPassword: string) {
   // this.password = password;
   // this.save();
   return password;
+});
+
+userSchema.pre("save", async function () {
+  this.password = await bcrypt.hash(this.password, 10);
+  console.log(this);
+});
+
+userSchema.post("save", function (doc) {
+  console.log("%s has been saved", doc._id);
 });
 
 export const User = model<IUser, UserInstanceMethods>("Users", userSchema);

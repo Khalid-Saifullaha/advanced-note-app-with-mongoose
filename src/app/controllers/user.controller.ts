@@ -37,10 +37,10 @@ usersRoutes.post("/create-user", async (req: Request, res: Response) => {
 
     //Built in and custom instance net
 
-    const password = await User.hashPassword(body.password);
-    console.log(password, "static");
+    // const password = await User.hashPassword(body.password);
+    // console.log(password, "static");
 
-    body.password = password;
+    // body.password = password;
 
     const user = await User.create(body);
 
